@@ -1,3 +1,6 @@
 find / -name  namefile   查找一个文件
 useradd username  添加一个新用户
 passwd username   为用户设置密码
+cat /etc/passwd   查看所有用户的列表
+cat /etc/group    查看用户组
+w  查看当前活跃用户列表
