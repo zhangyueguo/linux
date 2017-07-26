@@ -4,3 +4,4 @@ passwd username   为用户设置密码
 cat /etc/passwd   查看所有用户的列表
 cat /etc/group    查看用户组
 w  查看当前活跃用户列表
+userdel [-r] username  删除用户账号
