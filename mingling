@@ -1,1 +1,3 @@
 find / -name  namefile   查找一个文件
+useradd username  添加一个新用户
+passwd username   为用户设置密码
