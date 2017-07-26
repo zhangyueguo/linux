@@ -5,3 +5,10 @@ cat /etc/passwd   查看所有用户的列表
 cat /etc/group    查看用户组
 w  查看当前活跃用户列表
 userdel [-r] username  删除用户账号
+
+
+ 修改 /etc/sudoers 文件，找到下面一行，在root下面添加一行，如下所示：
+
+## Allow root to run any commands anywhere
+root    ALL=(ALL)     ALL
+tommy   ALL=(ALL)     ALL    修改完毕，现在可以用tommy帐号登录，然后用命令 su - ，即可获得root权限进行操作。
