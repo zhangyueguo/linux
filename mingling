@@ -1,4 +1,8 @@
-find / -name  namefile   查找一个文件
+find / -name  namefile   查找一个文件    
+
+ useradd –d /usr/sam -m sam
+此命令创建了一个用户sam，其中-d和-m选项用来为登录名sam产生一个主目录/usr/sam（/usr为默认的用户主目录所在的父目录）。
+
 useradd username  添加一个新用户
 passwd username   为用户设置密码
 cat /etc/passwd   查看所有用户的列表
