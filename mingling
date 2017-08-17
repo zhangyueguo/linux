@@ -16,3 +16,13 @@ userdel [-r] username  删除用户账号
 ## Allow root to run any commands anywhere
 root    ALL=(ALL)     ALL
 tommy   ALL=(ALL)     ALL    修改完毕，现在可以用tommy帐号登录，然后用命令 su - ，即可获得root权限进行操作。
+
+
+
+//mysql  链表+分组查询
+$sql = "SELECT courseId,userId,sum(learnTime) AS learnTime FROM course_lesson_learn GROUP BY userId ORDER BY learnTime DESC limit 5";
+		$sql = "SELECT c.courseId,c.userId,sum(c.learnTime) AS learnTime,user.nickname,user.smallAvatar,user_profile.truename,course.title FROM course_lesson_learn c ";
+		$sql .= "LEFT JOIN user user ON c.userId = user.id ";
+		$sql .= "LEFT JOIN user_profile user_profile ON c.userId = user.id ";
+		$sql .= "LEFT JOIN course course ON c.courseId = course.id ";
+        $sql .= "GROUP BY c.userId ORDER BY learnTime DESC limit 5";
