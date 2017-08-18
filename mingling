@@ -26,3 +26,7 @@ $sql = "SELECT courseId,userId,sum(learnTime) AS learnTime FROM course_lesson_le
 		$sql .= "LEFT JOIN user_profile user_profile ON c.userId = user.id ";
 		$sql .= "LEFT JOIN course course ON c.courseId = course.id ";
         $sql .= "GROUP BY c.userId ORDER BY learnTime DESC limit 5";
+
+复制目录的命令
+cp -rf yuezhime /alidata/www/yuexin
+
