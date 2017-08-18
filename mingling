@@ -30,3 +30,7 @@ $sql = "SELECT courseId,userId,sum(learnTime) AS learnTime FROM course_lesson_le
 复制目录的命令
 cp -rf yuezhime /alidata/www/yuexin
 
+修改目录所属组
+
+chown www:www /alidata/www/yuexin -R
+
