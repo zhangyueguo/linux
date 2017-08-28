@@ -42,3 +42,10 @@ gpasswd -a admin admin
 
 gpasswd -a 新用户 用户组 可以将用户添加到用户组里
 
+
+- R 递归式地改变指定目录及其下的所有子目录和文件的属组。
+
+　　例1：$ chgrp - R book /opt/local /book
+
+　　改变/opt/local /book/及其子目录下的所有文件的属组为book。
+
