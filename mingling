@@ -48,4 +48,8 @@ gpasswd -a 新用户 用户组 可以将用户添加到用户组里
 　　例1：$ chgrp - R book /opt/local /book
 
 　　改变/opt/local /book/及其子目录下的所有文件的属组为book。
+  
+  linux 权限管理
+  chmod -R 755 目录
+  
 
