@@ -59,6 +59,10 @@ gpasswd -a 新用户 用户组 可以将用户添加到用户组里
     touch -d "2 days ago" 1.txt
     touch -t 1605160430 1.txt
     
+    改变文件修改时间  touch -m -d "2001-01-01 10:10:10" 1.txt
+    
+    
+    
     
     
   
