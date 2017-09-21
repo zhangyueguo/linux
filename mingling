@@ -52,4 +52,16 @@ gpasswd -a 新用户 用户组 可以将用户添加到用户组里
   linux 权限管理
   chmod -R 755 目录
   
+  二.文件时间状态
+    
+    stat 1.txt
+    
+    touch -d "2 days ago" 1.txt
+    touch -t 1605160430 1.txt
+    
+    
+    
+  
+  
+  
 
