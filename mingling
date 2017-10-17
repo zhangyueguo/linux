@@ -62,6 +62,10 @@ gpasswd -a 新用户 用户组 可以将用户添加到用户组里
     改变文件修改时间  touch -m -d "2001-01-01 10:10:10" 1.txt
     
     
+    三.数据库 
+    
+    “select id,roomId,stream from liveroom where roomId not in(select roomId from liveroom_teacher where status = 'passed' and isUseing = 'true' group by roomId) order by id asc"
+    
     
     
     
