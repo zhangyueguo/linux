@@ -1,7 +1,21 @@
 安装虚拟机
 下载镜像 官网现在
 
-1.配置网卡    
-/etc/sysconfig/network-scripts  中   
+1.配置网卡    centos7  
+/etc/sysconfig/network-scripts  中   找到配置文件   修改   DNBOOT = yes 
+
+
+操作网卡（启动/停止/重启）
+
+启动： /etc/init.d/network start
+停止： /etc/init.d/network stop
+重启： /etc/init.d/network restart 
+
+ping ip  进行网络监测
+
+
+
+
+
 
 
