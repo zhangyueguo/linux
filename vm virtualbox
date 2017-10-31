@@ -1,3 +1,7 @@
 安装虚拟机
 下载镜像 官网现在
 
+1.配置网卡    
+/etc/sysconfig/network-scripts  中   
+
+
