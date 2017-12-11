@@ -3,3 +3,5 @@ shell 编程
 保存为  .sh 文件  
 将脚本修改为可执行的  chmod +x filename.sh
 执行脚本    ./filename.sh
+1.shell 中的变量      只读变量  readonly  即变量的值不能改变。
+                      删除变量 unset 变量名
