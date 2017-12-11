@@ -1,1 +1,5 @@
 shell 编程
+格式   #!/bin/sh    
+保存为  .sh 文件  
+将脚本修改为可执行的  chmod +x filename.sh
+执行脚本    ./filename.sh
