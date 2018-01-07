@@ -70,6 +70,11 @@ gpasswd -a 新用户 用户组 可以将用户添加到用户组里
     
     四.ab 命令
     ab -n 100000 -c 40  http://10.10.163.233/tesxt.txt     模拟 100000 请求   并发40  
+    
+    五.shell 命令 操作hdfs
+      linux 系统   ls  cat  mddir  rm  chmod  chown
+      HDFS 文件交互： copyFromLocal  copyToLocal  get  put
+    
   
   
   
