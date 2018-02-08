@@ -74,6 +74,19 @@ gpasswd -a 新用户 用户组 可以将用户添加到用户组里
     五.shell 命令 操作hdfs
       linux 系统   ls  cat  mddir  rm  chmod  chown
       HDFS 文件交互： copyFromLocal  copyToLocal  get  put
+      
+      
+    六. mysql 数据库最大连接数 查看和设置
+    
+   登入mysql     mysql -uroot -p 123456
+   
+   查看最大连接数  show variables like 'max_connections';
+   修改最大连接数  set global max_connections = 152;   
+   
+   这是在没有重启服务是修改
+   
+   在配置文件中修改：   
+      
     
   
   
