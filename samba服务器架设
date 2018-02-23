@@ -5,3 +5,25 @@
 安装 samba 和 samba-client      yum install -y samba samba-client   
 
 身份认证   useradd test    pdbedit -a test
+
+启动samba服务  
+    添加开机启动   chkconfig smb on 
+    立即启动samba   service smb start 
+    
+    在windons  地址栏   \\ip 
+    
+    自定义共享目录
+     1.创建共享目录 ，并修改权限
+     mkdir -R /var/www/html
+     chmod -R 777 /var/www/html
+     2.修改配置文件 ： /etc/samba/smb.conf
+       添加如下内容：
+         【html】        共享目录
+             path    /var/www/html  位置
+             browseable = yes    是否可以浏览
+             writable  = yes    是否可以写入
+               public = no  是否可以写人
+    
+    
+    
+    
