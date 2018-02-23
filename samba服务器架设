@@ -1,0 +1,6 @@
+1.关闭防火墙 service iptables stop   
+
+关闭 SELinux     setenforce 0
+
+安装 samba 和 samba-client      yum install -y samba samba-client   
+
