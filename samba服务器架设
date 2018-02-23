@@ -4,3 +4,4 @@
 
 安装 samba 和 samba-client      yum install -y samba samba-client   
 
+身份认证   useradd test    pdbedit -a test
