@@ -23,6 +23,28 @@
              browseable = yes    是否可以浏览
              writable  = yes    是否可以写入
                public = no  是否可以写人
+               
+               
+ 2.ftp服务器的搭建
+ 关闭防火墙   service iptables stop
+
+ 关闭  SELinux setenforce 0
+
+  安装所需依赖及编译工具  openssl-devel perl
+
+  下载pure-ftpd     curl -o  
+
+   添加管理用户    useradd test
+                  mkdir -p /var/www/html/
+                  chown -R test:test  /var/www/html/
+                 ./bin/pure-pw useradd ftp_user1 -u test -d /var/www/html
+                 ftp_user1: ftp 登入用户名
+                  -u :指定系统中存在的用户
+                  -d: 指定访问的目录
+
+    创建虚拟的用户数据库
+    ./bin/pure-pw mkdb
+              
     
     
     
