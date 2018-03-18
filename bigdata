@@ -3,3 +3,4 @@ hadoop 安装
 配置java的环境变量   vim /etc/profile       里面配置 具体在看 虚拟机    
 
                    
+让配置生效    source /etc/profile   
