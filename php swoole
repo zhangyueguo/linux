@@ -1,1 +1,6 @@
 学习Swoole
+
+源码编译安装  php  安装apache     sudo apt-get install apache2
+
+配置虚拟域名：   /etc/hosts       2.在“/etc/apache2/sites-available”目录下有“000-default.conf” 
+                                将000-default.conf 复制一份叫做 alex.conf 
