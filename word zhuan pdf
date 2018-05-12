@@ -1,0 +1,30 @@
+教程地址  http://www.jb51.net/article/127358.htm
+
+
+1、ubantu下安装libreoffice
+
+sudo apt-get install libreoffice
+
+2、命令行执行word转pdf
+
+将 /home/wordToPdf/wordFiles/目录下的CAS.docx转成pdf存放到 /home/wordToPdf/pdfFiles 目录下：
+
+libreoffice --headless --convert-to pdf:writer_pdf_Export /home/wordToPdf/wordFiles/CAS.docx --outdir /home/wordToPdf/pdfFiles
+ 
+/usr/share/fonts 下放中文字体
+fc-cache-fv 更新字体缓存
+在php中执行的代码
+
+$a='./doc/2.doc';
+$b='./pdf';
+//$str ="libreoffice --headless --convert-to pdf:writer_pdf_Export ./doc/2.doc --outdir ./pdf";
+//$str ='ls '.'./';
+$str = "export HOME=/tmp && libreoffice --headless -convert-to pdf /var/www/html/doc/2.doc -outdir /var/www/html/pdf";
+var_dump(system($str));
+
+
+
+2.http://amspring.iteye.com/blog/2184060  
+
+
+
