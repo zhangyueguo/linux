@@ -24,3 +24,14 @@ UPDATE fight_plan2017 SET professionname = LEFT(professionname, INSTR(profession
 
 
 select id,zhaoshengpici,xuezhi,xuefei,schoolname,professionname,SUM(jihuashu) as zongji,concat(",",GROUP_CONCAT(zhaonumber),",") as zhaodai from fight_plan2017_copy1 GROUP BY schoolname,professionname
+
+
+1.小程序专业整理
+
+2.update a inner join b on a.bid=b.id set a.x=b.x,a.y=b.y ;       表A和表B，现在希望更新A表，当 A.bid = B.id时，a.x = b.x, a.y=b.y，
+
+
+
+3.update table1 a set a.字段=a.trim（a.字段）;    去掉字段前面后面的空格
+
+  update table1 a set a.字段=replace(a.字段,'','');
