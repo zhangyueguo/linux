@@ -35,3 +35,53 @@ select id,zhaoshengpici,xuezhi,xuefei,schoolname,professionname,SUM(jihuashu) as
 3.update table1 a set a.字段=a.trim（a.字段）;    去掉字段前面后面的空格
 
   update table1 a set a.字段=replace(a.字段,'','');
+  
+  
+  四. mysql 数据整理常用的sql语句
+  
+  1.更新数据库字段值
+
+UPDATE fight_evaluation_question set title= LEFT( title, INSTR(title, '-') - 1);
+
+UPDATE fight_plan2017 set schoolname= LEFT( schoolname, INSTR(schoolname, '-') - 1);
+
+SELECT id,professionname, INSTR(professionname,'(') FROM fight_plan2017;
+
+UPDATE test_name SET  name = LEFT(name,  INSTR(name, '/') - 1) WHERE INSTR(name, '/') > 0;
+
+根据条件把字段值进行替换
+
+UPDATE fight_plan2017 SET professionname = LEFT(professionname, INSTR(professionname,'(') - 1) WHERE INSTR(professionname,"(") > 0;
+
+
+
+
+总结sql  语句
+
+
+三.  根据分组把字段的值加起来，字符串连接起来的sql语句，分组的字段有多个
+
+
+select id,zhaoshengpici,xuezhi,xuefei,schoolname,professionname,SUM(jihuashu) as zongji,concat(",",GROUP_CONCAT(zhaonumber),",") as zhaodai from fight_plan2017_copy1 GROUP BY schoolname,professionname
+
+
+
+update fight_plan17 as f inner join fight_school s on f.schoolname=s.SchoolNme set f.schoolid=s.schoolId;
+
+
+update fight_plan17 as f inner join fight_profession_info s on f.professionname=s.name set f.professionId=s.id;
+
+
+四.sql语句查询
+
+
+UPDATE fight_plan2017_zaizheli SET professionname = LEFT(professionname, INSTR(professionname,'(') - 1) WHERE INSTR(professionname,"(") > 0;
+
+select id,zhaoshengpici,xuezhi,xuefei,schoolname,professionname,SUM(jihuashu) as zongji,concat(GROUP_CONCAT(zhaonumber),",") as zhaodai from fight_plan2017_zaizheli GROUP BY schoolname,professionname,zhaoshengpici
+
+
+五.去除数据表中 空格之后的所有内容
+UPDATE fight_admission SET pici = LEFT(pici,INSTR(pici," ") - 1) WHERE INSTR(pici," ") > 0;
+
+  
+  
