@@ -83,5 +83,43 @@ select id,zhaoshengpici,xuezhi,xuefei,schoolname,professionname,SUM(jihuashu) as
 五.去除数据表中 空格之后的所有内容
 UPDATE fight_admission SET pici = LEFT(pici,INSTR(pici," ") - 1) WHERE INSTR(pici," ") > 0;
 
+六.等级 sql 语句
+UPDATE fight_profession_training as p1 SET p1.parent_id = (select p2.id FROM (select tmp.* from fight_profession_training tmp) as p2 WHERE LEFT(p1.`number`, 2) = p2.number LIMIT 1) WHERE p1.level = 2;
+
+七.先排序 在分组 
+
+select a.id,a.schoolid,a.pici,a.admissionline,a.lastrank,a.iswenli from (  
+    select * from fight_admission WHERE year = 2016 order by lastrank	desc  
+) a  
+group by a.schoolid,a.iswenli;
+
+SELECT
+	a.id,
+	a.schoolid,
+	a.pici,
+	a.admissionline,
+	a.lastrank,
+	a.iswenli 
+FROM
+	( SELECT * FROM fight_admission WHERE YEAR = 2016 ORDER BY lastrank DESC ) a 
+GROUP BY
+	a.schoolid,
+	a.iswenli;
+
+分组排序查询
+SELECT
+	* 
+FROM
+	fight_admission 
+WHERE
+	`year` = 2016 
+GROUP BY
+	schoolid,
+	iswenli 
+ORDER BY
+	lastrank DESC;
+
+
+
   
   
