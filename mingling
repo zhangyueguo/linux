@@ -86,6 +86,13 @@ gpasswd -a 新用户 用户组 可以将用户添加到用户组里
    这是在没有重启服务是修改
    
    在配置文件中修改：   
+   
+   
+   七.查看目录及其文件的大小
+   
+   du -h --max-depth=1 work/testing
+   
+   du -h --max-depth=1 work/testing/*
       
     
   
