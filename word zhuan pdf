@@ -28,3 +28,31 @@ var_dump(system($str));
 
 
 
+
+二.unoconv 中文乱码
+ unoconv 是一款跨平台的工具，用于转换文档格式
+
+Universal Office Converter - Convert between any document format supported by LibreOffice/OpenOffice.
+
+命令支持
+要查看系统中已经安装的字体，我们可以使用fc-list命令进行查看。如果系统中没有该命令的话，我们需要先安装相关的软件包。
+
+在centos上，使用如下命令进行安装：
+
+yum install -y fontconfig mkfontscale
+
+在ubuntu上，使用如下命令进行安装：
+
+sudo apt-get -y install fontconfig xfonts-utils
+
+安装中文字体
+apt-get install ttf-wqy-microhei
+
+查看中文字体：fc-list :lang=zh
+
+然后进行转换就行了
+
+unoconv <filename>.ppt <filename>.pdf
+
+
+
