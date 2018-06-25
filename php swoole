@@ -7,3 +7,24 @@
                                  ln -s /etc/apache2/sites-available/alex.conf ../sites-enabled/
                                  
                                  sudo /etc/init.d/apache2 restart
+                                 
+                                 
+                                 
+ 2. 关闭 swoole 端口
+ 
+ 每个端口都有一个守护进程，kill掉这个守护进程就可以了
+
+每个端口都是一个进程占用着，
+
+第一步、用下面命令
+
+netstat -anp |grep 端口
+
+找出占用这个端口的进程，
+
+第二步、用下面命令
+
+kill -9 PID 
+
+杀掉就行了
+                                 
