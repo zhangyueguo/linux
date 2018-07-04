@@ -1,3 +1,53 @@
+一. 修改数据库中最大的连接数
+
+查看数据库中最大连接数的配置
+show variables like '%max_connections%';
+
+设置最大连接数
+ set GLOBAL max_connections = 2000;
+ 
+ 第二种办法：
+ 
+ 应该修改mysql配置文件my.cnf，在[mysqld]段中添加或修改max_connections值：
+
+max_connections=2000
+
+
+注：
+
+备注一些常用的mysql状态命令参数
+
+mysql> show status like 'Threads%';
++-------------------+-------+
+| Variable_name     | Value |
++-------------------+-------+
+| Threads_cached    | 58    |
+| Threads_connected | 57    |   ###这个数值指的是打开的连接数
+| Threads_created   | 3676  |
+| Threads_running   | 4     |   ###这个数值指的是激活的连接数，这个数值一般远低于connected数值
++-------------------+-------+
+
+------------------------------------------------------------------------------------------------------
+
+mysql> show status like '%Max_used_connections%';
++----------------------+-------+
+| Variable_name        | Value |
++----------------------+-------+
+| Max_used_connections | 30    |
++----------------------+-------+
+1 row in set (0.00 sec)
+
+Max_used_connections 同时使用的连接的最大数目。
+
+Threads_connected 当前打开的连接的数量。
+Threads_running 不在睡眠的线程数量。
+
+
+
+
+
+
+
 数据库建模工具的使用
 
 1.更新数据库字段值
