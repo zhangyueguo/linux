@@ -44,7 +44,11 @@ Threads_running 不在睡眠的线程数量。
 
 
 
+二. 观察带宽的 占比情况
 
+1.get-get install nload
+
+  nload
 
 
 
