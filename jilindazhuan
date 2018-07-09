@@ -7,3 +7,7 @@
 
   root  zhang.110       mysql  root zhang.110
 
+CREATE DATABASE `edusoho` DEFAULT CHARACTER SET utf8 ; 
+GRANT ALL PRIVILEGES ON `edusoho`.* TO 'esuser'@'localhost' IDENTIFIED BY 'edusoho';
+quit;
+注意：这里为edusoho数据库创建了一个用户名，用户名为：esuser，密码为edusoho，在后面安装的第三步需要用到，不建议直接填写root账户
