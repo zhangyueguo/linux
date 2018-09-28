@@ -27,4 +27,6 @@ netstat -anp |grep 端口
 kill -9 PID 
 
 杀掉就行了
+
+3.删除  .user.ini          运行 chattr -i .user.ini   在运行 
                                  
