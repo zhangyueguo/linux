@@ -94,7 +94,8 @@ gpasswd -a 新用户 用户组 可以将用户添加到用户组里
    
    du -h --max-depth=1 work/testing/*
       
-    
+    八.crontab -e   改为 vim 编辑    export EDITOR=vim    
+       重启       service cron   restart  
   
   
   
