@@ -98,4 +98,7 @@ exec(“/usr/bin/convert test.pdf %d.jpg”);
 例如：/usr/bin/unoconv
 
 
+五.html 转 pdf   wkhtmltopdf   
+
+
 
