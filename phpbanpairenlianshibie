@@ -1,0 +1,76 @@
+<?php
+
+
+namespace app\index\controller;
+
+
+class Test
+{
+//    private $url = 'https://openapi.xiyun.net/gateway.do';
+    private $url = 'http://crouter.yunzongnet.com/oplatformgateway/t4204/gateway.do';
+    private $appId = '910032';
+    private $format = 'JSON';
+    private $charset = 'utf-8';
+    private $signType = 'RSA';
+    private $version = '1.0';
+    private $rsaPrivateKey = 'MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAIGrXlauWv11TyscjszId4U0DPMmpWRRh5vpxcrIu/c4J+PGArC7mKzJkbZCjFzb8GrHbAyXHHS5rTE30B3qRB0yJXO4OtXUmoa0e+OCoprYfW6Y6Lz1stYR6YH1gevs/tYRBIyJTIB6uroCQuQZlUdQuIWYhFYuyds5yNicmg4rAgMBAAECgYBICKIctzk26k8znOa7XnX/Gn5DKWnhw+T4uTI2x7Kb0KdgQmTGN0DGZCe9P1ToVQpG10fv6pZVRbyvxdiodbamTUyHoBFh0rBzz6QzH0zbrBiuixDxI6r9+kgBF3NtqHU8xQc/3V338xLl6Bs02qLDjHCiQ1NVjCOCwCOuhSYbqQJBAObqFmq0VTP+YPVhXH8qOZXGF4UAZXcZCgrgcQRSHkttbzgurwRKn4nyRdxHI3nHsBJnSQFe1N4HwYjdQ7BwUB8CQQCPwZPSX6dOy5Cs9HeIkJU7Sc3fI5FPq7y0I8w52tUbRZs7DYkNLPy+RqhCd7okZqO+hDYAiDra+KGdWvGdTJB1AkEAqoXh6gikBxJqbarpkKsQ/W7c/YYOaAYgqWmXbFZsMs1s3bNz4Zpt+IPmXUZXh14Uw3JssktirVhS7oxfqVM3hwJAcXmISgOfeZ9OcHf48x/N7KLxkzXsOkuCBWBMkU6f8YscYZzpljDwwPHdV7pSgPFUR8rtJbZjXv3r9N4Y4uXREQJBAMRpi2XXIlq8UkeaJISa4Oqr6zpy1x2v3LtTstyZ5LavWR3iOwktcl1yzZhSDCREKQsqOcFNCj8GMhmJDRzm3q0=';
+
+    public function index()
+    {
+        dd($this->postRequest());
+    }
+
+
+    /**
+     * post请求
+     * @return bool|string
+     */
+    function postRequest()
+    {
+//        $method = 'xy.member.face.query';
+        $method = 'xy.k12.member.query';
+        $timestamp = microtime(true);
+        $data = [
+            'charset' => $this->charset,
+            'biz_content' => json_encode([
+//                'business_code' => '802460',
+                'business_code' => '304988',
+                'algorithmic_version' => 'jasmine_v1.0-6f2338dfd6-8c8cf6d483',
+                'id_card_list' => [370827199409100815, 370181199407256138]
+            ]),
+            'method' => $method,
+            'appid' => $this->appId,
+            'format' => $this->format,
+
+            'sign_type' => $this->signType,
+            'version' => $this->version,
+            'timestamp' => (string)$timestamp,
+        ];
+        ksort($data);
+        $signStr = '';
+        foreach ($data as $key => $value) {
+            $signStr .= $key . '=' . $value . '&';
+        }
+        $sign = '';
+        $res = "-----BEGIN RSA PRIVATE KEY-----\n" .
+            wordwrap($this->rsaPrivateKey, 64, "\n", true) .
+            "\n-----END RSA PRIVATE KEY-----";
+        openssl_sign(rtrim($signStr, '&'), $sign, $res);
+        $data['sign'] = base64_encode($sign);
+        $data = json_encode($data);
+        $headerArray = array("Content-type:application/json;charset='utf-8'", "Accept:application/json");
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $this->url);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headerArray);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        $output = curl_exec($curl);
+        curl_close($curl);
+        //将返回的json对象解码成数组对象并返回
+        $output = json_decode($output, true);
+        return $output;
+    }
+}
