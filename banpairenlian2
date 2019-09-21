@@ -1,0 +1,73 @@
+<?php
+
+
+namespace app\index\controller;
+
+
+class Test
+{
+    private $url = 'https://openapi.xiyun.net/gateway.do';
+    private $appId = '12013311';
+    private $format = 'JSON';
+    private $charset = 'UTF-8';
+    private $signType = 'RSA';
+    private $version = '1.0';
+    private $rsaPrivateKey = 'MIIEogIBAAKCAQEAqRjD9HBvurs8m5LiYln1AYd+Gqs6bsGcTdZSLA1chmRblsaNdBmeabxTws2xnoIVZEc/EfuWFKb/AXDF6rVJMssBfBQTALzoH1H2qeJFpGkB63THxDw6VkX60XUv02jt0qqCVBpFzcDxVOZRPGCHDSikyJgxIZPU8N4s8S6M2ihOYjZ4zfOD/FH+ZF9cMN0qaWnYp0sW94uqno3LWNXgVU0LoYsVyRarmd0r0vU8n9pqJA3GtxtmMPjkWOtO4exgfOBttRjWAscLanouBC6fg0CuADBmLHUFtX963fG3P/AsFJxwhSlpS+bs/5YLlDBHrltIfHb6whShuTorwMI42wIDAQABAoIBADYZNT/z5NsB4h8HvCOpEgh+N6sCkvwyNvZ0FfAAClT4sJCpT0IQnCzJ0qZlNmk2xu9BF/2B1v8eekEUuk0f2J5GcmAm7/lxdnXmvBqXyJ4T9khFIVA30JYfZ2Ixsq5ZSJT4dh/AFAsCqnL2CJFfdHWSRj3i6v0KFbtF6Wzz7p4wd9JYOaQ90ZJN4hbBz290UeOTGoJeQbbscSgaLIsOSiiDDsxx47YeHZMV3NHT9/4PqlF/Tu7ULujxOimkaHJOpiTNyt2A/kozQfd37/XifqmHhE9zOtrzkwzi0EmbKstkl6dhTMqjZOAOjjU6TI/GPRQDj0yfeUp9RBjEPNOkWJkCgYEA1JP4MeS1wnu8zALi3Q/g91ESn8lmXpT0Flc3GnyJgUJG74X2LjRgiYMSvtOsjFRuEAJsFUU4ShJwqWz2QtiFIJCE1EGFqr2VNZVfVPB6Z34WcdO3kkcseafE3tRxHgwwh1TxnR58q99ujMxUgoNeTYFss38wHl20KALQ0SmaifcCgYEAy6MX//eeXGq/EjZ18ApjV7aQ2cjMSadLQXERNcKJuOpZ0MF6aGFruBHwKsBYgJpyyCzR+iO4LxEvcLHVDn6NykPzYbwzHj1+8xDS0WMV7RO0Wkucu4wfiOj94fTsasYvw6n1hbx1JKBhZNrQsj987TGNN+NxpQWP4N8gbjZ9Lz0CgYADjUFdXAvpZvXdlsLBnM1OdI1SHCRYujZl1Sk3iRMnFLtorx1Q4lEmmwkKJTFB2vtHyzKRHGn3Wt2FBywKK+H1jFSb00hvdOF0Vr2UBryU1Bd96WKs0AGfOr1gV75YGS4KZNHwpRzCJmaLdbKHx7ggpWPyj9J2/2vOK1Xf2MkbOwKBgDB6iVIkrwytVQOO95DHyFKvYdiXFxtJun6/3isAPy1IjU1HYk7LMovFqXlkBS3Ilx7UnMCCFG0QGE0p6ODke/j1KFHSLhE67qgLD0VN44BnOn5slcmIWFGNtjM+zbG1sNVR9uN5tCGeFNGfziNBPgpxy37MpNd2dYRBWkUir7a5AoGAW10pK4E+5O6siZU0zuAkwaMsvTsofU0+gbFaVLBOxa8wYyE8SQM6eN49fqIrgX2idqMVF/hA1OgLg/73Eun+3nPtcDQaLl2DngeZN5qiVOwRrg1dP0yPwpGYSiPcuL31g/o7jbZSrRg9Y+0jJGFCpdn/gLoOMUBRXHDYcrBcCKU=';
+
+    public function index()
+    {
+        dd($this->postRequest());
+    }
+
+
+    /**
+     * post请求
+     * @return bool|string
+     */
+    function postRequest()
+    {
+        $method = 'xy.k12.member.query';
+        $timestamp = (int)microtime(true) * 1000;
+        $data = [
+            'charset' => $this->charset,
+            'biz_content' => json_encode([
+                'merchant_code' => '103392',
+                'algorithmic_version' => 'jasmine_v1.2-9903ebccf5-9903ebccf5',
+                'id_card_list' => '371202200112247716,371723200212310654'
+            ]),
+            'method' => $method,
+            'appid' => $this->appId,
+            'format' => $this->format,
+
+            'sign_type' => $this->signType,
+            'version' => $this->version,
+            'timestamp' => (string)$timestamp,
+        ];
+        ksort($data);
+        $signStr = '';
+        foreach ($data as $key => $value) {
+            $signStr .= $key . '=' . $value . '&';
+        }
+        $sign = '';
+        $res = "-----BEGIN RSA PRIVATE KEY-----\n" .
+            wordwrap($this->rsaPrivateKey, 64, "\n", true) .
+            "\n-----END RSA PRIVATE KEY-----";
+        openssl_sign(rtrim($signStr, '&'), $sign, $res);
+        $data['sign'] = base64_encode($sign);
+        $data = json_encode($data);
+        $headerArray = ["Content-type:application/json;charset='utf-8'", "Accept:application/json"];
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $this->url);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, FALSE);
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headerArray);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        $output = curl_exec($curl);
+        curl_close($curl);
+        //将返回的json对象解码成数组对象并返回
+        $output = json_decode($output, true);
+        return $output;
+    }
+}
