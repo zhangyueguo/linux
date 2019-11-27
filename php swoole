@@ -31,4 +31,7 @@ kill -9 PID
 杀掉swoole中的所有进程  ：     ps -aux|grep swoole:server |awk '{print $2}' |xargs kill -9
 
 3.删除  .user.ini          运行 chattr -i .user.ini   在运行 
+
+
+4. php socket编程文章教程    https://www.cnblogs.com/loveyoume/p/6076101.html
                                  
