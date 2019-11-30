@@ -1,0 +1,268 @@
+创建和绑定信息流
+
+namespace app\api\controller;
+
+use think\facade\Config;
+use think\facade\Log;
+class Socket
+{
+    public function send()
+    {
+        // TODO 通知充电桩开始充电
+
+        $socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+        socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, ["sec" => 1, "usec" => 0]);
+        socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, ["sec" => 3, "usec" => 0]);
+        if ($socket === false) {
+            Log::error('socket_create() 失败的原因是:' . socket_strerror(socket_last_error()));
+        }
+
+        $result = socket_connect($socket, Config::get('address'), Config::get('port'));
+        if ($result === false) {
+            Log::error('socket_connect() 失败的原因是:' . socket_strerror(socket_last_error($socket)));
+        }
+
+        $in = (new SendStr())->open();
+        socket_write($socket, $in, strlen($in));
+        $result = true;
+        while ($out = socket_read($socket, 2048)) {
+            $out = str_split(bin2hex($out), 2)[45];
+            var_dump($out);
+            break;
+        }
+        socket_close($socket);
+        return $result;
+    }
+}
+
+
+tcp 服务端
+
+<?php
+
+/**
+ *
+ * User: zhanghao~
+ * Date: 2019-11-25 0025
+ * Email: <805131398@qq.com>
+ */
+
+namespace app\http;
+
+use app\common\model\Switches;
+use Swoole\Server;
+
+class Swoole
+{
+
+    public $server;
+
+    public function __construct()
+    {
+        $this->server = new Server('0.0.0.0', 39066, SWOOLE_BASE, SWOOLE_SOCK_TCP);
+        $this->server->on('receive', [$this, 'onReceive']);
+        $this->server->on('close', [$this, 'onClose']);
+        $this->server->start();
+    }
+
+    public function onReceive(Server $server, $fd, $reactorId, $inData)
+    {
+        echo "我是FD  ------->{$fd}\n\n";
+        echo $inData . '<-------刚接收到的数据' . PHP_EOL . PHP_EOL;
+        echo bin2hex($inData) . '<-------bin2hex()处理过的数据' . PHP_EOL . PHP_EOL;
+        $res = preg_replace('# #', '', bin2hex($inData));
+
+//        用户通过接口传过来的指令
+        $switch_in = json_decode($inData, true);
+        if (is_array($switch_in)) {
+            $_SESSION['switch_all_info'] = $fd;
+            $type                        = $switch_in['type'];
+            switch ($type) {
+//                    控制开关
+                case 'control_switch':
+                    $s_in = $this->switches($switch_in['status'], $switch_in['index']);
+                    $server->send($switch_in['fd'], hex2bin(preg_replace('# #', '', $s_in)));
+                    $server->send($switch_in['fd'], hex2bin(preg_replace('# #', '', 'FE 01 00 00 00 08 29 C3')));
+                    break;
+//                    查询八路状态
+                case 'switch_all_info':
+                    $server->send($switch_in['fd'], hex2bin(preg_replace('# #', '', 'FE 01 00 00 00 08 29 C3')));
+                    break;
+//                    全开
+                case 'all_open':
+                    $server->send($switch_in['fd'], hex2bin(preg_replace('# #', '', 'FE 0F 00 00 00 08 01 FF F1 D1')));
+                    $server->send($switch_in['fd'], hex2bin(preg_replace('# #', '', 'FE 01 00 00 00 08 29 C3')));
+                    break;
+//                    全关
+                case 'all_close':
+                    $server->send($switch_in['fd'], hex2bin(preg_replace('# #', '', 'FE 0F 00 00 00 08 01 00 B1 91')));
+                    $server->send($switch_in['fd'], hex2bin(preg_replace('# #', '', 'FE 01 00 00 00 08 29 C3')));
+                    break;
+            }
+        }
+
+        if (!empty($res)) {
+            if ($res === '010203040506') {
+//            登录成功
+                echo '登录成功' . PHP_EOL;
+                $_SESSION['switch_session_'.$fd] = $fd;
+//                获取设备唯一ID
+                $server->send($fd, hex2bin(preg_replace('# #', '', 'FE 04 03 EE 00 08 85 B2')));
+            } else {
+                $in = substr($res, 0, 2);
+
+                if (strpos($in, 'f') === 0) {
+                    $in = substr($res, 2, 2);
+                    switch ($in) {
+                        case '04':
+                            echo '把设备唯一ID保存到数据库 switch------->' . ($inData) . 'fd-->' . $fd . PHP_EOL;
+                            $this->mysqlConn($inData, $fd);
+                            break;
+                        case '01':
+                            /**
+                             * 首先把返回信息中的状态码 转成2进制
+                             * 从右往左看，位数不足时从左侧填充0
+                             * 0为关  1为开
+                             */
+//                              获取状态码
+                            $info = substr($res, 6, 2);
+//                              转为2进制
+                            $byte = base_convert($info, 16, 2);
+//                              补齐位数 共8位
+                            $length = 8 - strlen($byte);
+                            for ($i = 0; $i < $length; $i++) {
+                                $byte = '0' . $byte;
+                            }
+//                              查看开关状态
+                            $arr = array_reverse(str_split($byte, 1));
+//                            保存到数据库
+                            $conn = $this->mysqlConn('','','conn');
+                            mysqli_query($conn, "UPDATE ban_switches SET 
+                                    `one` = '{$arr[0]}', 
+                                    `two` = '{$arr[1]}', 
+                                    `three` = '{$arr[2]}', 
+                                    `four` = '{$arr[3]}', 
+                                    `five` = '{$arr[4]}', 
+                                    `six` = '{$arr[5]}', 
+                                    `seven` = '{$arr[6]}', 
+                                    `eight` = '{$arr[7]}' 
+                                        WHERE fd='{$fd}'");
+
+                            mysqli_close($conn);
+
+                            $final = [
+                                'type' => 'switch_all_info',
+                                'data' => $arr,
+                            ];
+
+                            echo 'return 回到接口 我要发送 FD--->' . $_SESSION['switch_all_info'] . PHP_EOL;
+                            $server->send($_SESSION['switch_all_info'], json_encode($final));
+                    }
+                }
+            }
+        }
+    }
+
+    public function onClose($serv, $fd)
+    {
+        if (!empty($_SESSION['switch_session_'.$fd])){
+            $conn = $this->mysqlConn('','','conn');
+            mysqli_query($conn, "UPDATE ban_switches SET on_line=0 WHERE fd='{$fd}'");
+            mysqli_close($conn);
+            echo "Client: Close.{$fd}\n 数据库状态改为 0\n";
+        }
+    }
+
+    /**
+     * @param $status 开（1）还是关（0）
+     * @param $index  第几路的继电器
+     * @return mixed
+     */
+    public function switches($status, $index)
+    {
+        $switch_open = [
+            0 => 'FE 05 00 00 FF 00 98 35',
+            1 => 'FE 05 00 01 FF 00 C9 F5',
+            2 => 'FE 05 00 02 FF 00 39 F5',
+            3 => 'FE 05 00 03 FF 00 68 35',
+            4 => 'FE 05 00 04 FF 00 D9 F4',
+            5 => 'FE 05 00 05 FF 00 88 34',
+            6 => 'FE 05 00 06 FF 00 78 34',
+            7 => 'FE 05 00 07 FF 00 29 F4',
+        ];
+
+        $switch_close = [
+            0 => 'FE 05 00 00 00 00 D9 C5',
+            1 => 'FE 05 00 01 00 00 88 05',
+            2 => 'FE 05 00 02 00 00 78 05',
+            3 => 'FE 05 00 03 00 00 29 C5',
+            4 => 'FE 05 00 04 00 00 98 04',
+            5 => 'FE 05 00 05 00 00 C9 C4',
+            6 => 'FE 05 00 06 00 00 39 C4',
+            7 => 'FE 05 00 07 00 00 68 04',
+        ];
+        return $status == 1 ? $switch_open[$index] : $switch_close[$index];
+    }
+
+
+    /**
+     * 吧FD保存到数据库
+     * @param String $switch_id
+     * @param $fd
+     * @return false|\mysqli
+     */
+    private function mysqlConn(String $switch_id, $fd,$type = '')
+    {
+        $servername = '47.105.229.255:3306';
+        $username   = 'banpai_yuezhix_';
+        $password   = 'banpai123';
+        $dbname     = 'banpai_yuezhix_';
+
+        $conn = mysqli_connect($servername, $username, $password, $dbname);
+        // 检测连接
+        if (!$conn) {
+            die("Connection failed: " . mysqli_connect_error());
+        }
+
+        if ($type === 'conn') {
+            return $conn;
+        }
+
+//        转码
+        $switch_id = utf8_encode($switch_id);
+
+        $switch_id = $this->qli($switch_id);
+
+//        先查询当前有没有FD
+        $result = mysqli_query($conn, "select * from ban_switches where switch_id = '{$switch_id}'");
+
+        var_dump($result);
+
+        if ($result->num_rows === 0) {
+            //        生成SQL语句
+            $sql = "INSERT INTO ban_switches (switch_id, fd,on_line) VALUES ('{$switch_id}','{$fd}',1)";
+
+
+            if (mysqli_query($conn, $sql)) {
+                echo "新记录插入成功";
+            } else {
+                echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+            }
+        } else {
+            echo '更新FD码和在线状态';
+            mysqli_query($conn, "UPDATE ban_switches SET fd='{$fd}' , on_line = 1 WHERE switch_id='{$switch_id}'");
+        }
+        mysqli_close($conn);
+    }
+
+    function qli($tx)
+    {
+        preg_match_all('/[\x{4e00}-\x{9fa5}a-zA-Z0-9]/u', $tx, $jg);
+        return join('', $jg[0]);
+    }
+
+}
+
+
+
+
