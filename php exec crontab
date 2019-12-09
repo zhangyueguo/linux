@@ -1,0 +1,80 @@
+<?php
+/**
+ *
+ * Created by PHPStorm
+ * User: zhanghao
+ * Date: 2019-12-5 0005$
+ * Time: 17:03$
+ * Email: <805131398@qq.com>
+ */
+
+namespace app\common\Util;
+
+class Crontab
+{
+
+	/**
+	 * 添加定时推送
+	 * @param $command
+	 * @return bool
+	 */
+	public function cronjob_exists($command): bool
+	{
+		$cronjob_exists = false;
+
+		exec('crontab -l', $crontab);
+
+		if (isset($crontab) && is_array($crontab)) {
+
+			$crontab = array_flip($crontab);
+
+			if (isset($crontab[$command])) {
+
+				$cronjob_exists = true;
+
+			}
+
+		}
+		return $cronjob_exists;
+	}
+
+
+	/**
+	 * 追加
+	 * @param $command
+	 * @return array
+	 */
+	public function append_cronjob($command): array
+	{
+
+		if(is_string($command)&&!empty($command)&&$this->cronjob_exists($command)===FALSE){
+
+			//add job to crontab
+			exec('echo -e "`crontab -l`\n'.$command.'" | crontab -', $output);
+
+		}
+		return ['command'=>$command,'status'=>empty($output)?0:1,'linux_user' => exec('whoami')];
+	}
+
+
+	/**
+	 * 删除全部
+	 */
+	public function del_cron(){
+		exec('crontab -r', $crontab);
+	}
+
+}
+
+创建一个定时任务
+			$cron         = new Crontab();
+			$i            = (String)((int)date('i', strtotime($data['app_time'])));
+			$h            = (String)(int)date('H', $appTime);
+			$d            = (String)(int)date('d', $appTime);
+			$m            = (String)(int)date('m', $appTime);
+			$dow          = '*';
+			$command      = config('timing_push') . $id;
+			$cron_command = "$i $h $d $m $dow $command";
+			$info         = $cron->append_cronjob($cron_command);
+
+
