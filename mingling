@@ -99,6 +99,9 @@ gpasswd -a 新用户 用户组 可以将用户添加到用户组里
        查看所有的定时任务   cut -d: -f1 /etc/passwd|xargs -i sudo crontab -u {} -l  
        
        查看 www 用户的 定时任务 crontab -u www -l  l   删除   crontab -u www -r
+       
+       
+       九.证书检测工具   https://www.myssl.cn/tools/check-server-cert.html
   
   
   
