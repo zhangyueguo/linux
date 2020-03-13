@@ -104,6 +104,8 @@ exec(“/usr/bin/convert test.pdf %d.jpg”);
   sudo apt-get install wkhtmltopdf  
   sudo apt-get install xvfb  
    sudo xvfb-run wkhtmltopdf --enable-forms https://www.baidu.com baidu.pdf
+
+   文档地址 ： https://www.cnblogs.com/houss/p/11940381.html
    
    安装中文字体：(主要是解决中文乱码问题）
     0、查看目前安装字体：fc-list
