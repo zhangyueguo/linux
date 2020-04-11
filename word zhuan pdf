@@ -119,5 +119,9 @@ exec(“/usr/bin/convert test.pdf %d.jpg”);
 
 
 
+xvfb-run wkhtmltopdf -T 15mm --header-spacing 5 --header-html http://questionbank.yuezhix.com/header --header-line --footer-center '[page]/[topage]' --footer-line toc cover http://questionbank.yuezhix.com/cover http://questionbank.yuezhix.com/workbench/downloadParse?id=609 /www/wwwroot/questionbank/public/data/questionPDF/2020-04-11/paper_609_Parse.pdf
+
+
+
 
 
