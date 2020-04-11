@@ -100,6 +100,8 @@ exec(“/usr/bin/convert test.pdf %d.jpg”);
 
 五.html 转 pdf   wkhtmltopdf   
 
+   https://wkhtmltopdf.org/downloads.html   (wkhtmltopdf 官网）
+
   学习网址 ： http://www.ptbird.cn/wkhtmltopdf-html-to-pdf.html  
   sudo apt-get install wkhtmltopdf  
   sudo apt-get install xvfb  
